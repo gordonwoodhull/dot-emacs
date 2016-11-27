@@ -151,3 +151,12 @@ Also returns nil if pid is nil."
 
 (setq mouse-wheel-scroll-amount '(1))
 (setq mouse-wheel-progressive-speed nil)
+
+; cancel minibuffer command when it loses focus
+; http://stackoverflow.com/a/3024055/676195
+(defun stop-using-minibuffer ()
+  "kill the minibuffer"
+  (when (and (>= (recursion-depth) 1) (active-minibuffer-window))
+    (abort-recursive-edit)))
+
+(add-hook 'mouse-leave-buffer-hook 'stop-using-minibuffer)
