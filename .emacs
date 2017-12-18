@@ -139,11 +139,22 @@ Also returns nil if pid is nil."
 
 (defun issue-link (numb)
   (interactive "sIssue number: ")
-  (insert "[#" numb "]" "(https://github.com/dc-js/dc.js/issues/" numb ")"))
+  (insert "[#" numb "]"
+          (format "(https://github.com/%s/issues/%s)"
+                  (replace-regexp-in-string
+                   "\\`.+github\\.com:\\(.+\\)\\.git\\'" "\\1"
+                   (magit-get "remote" (magit-get-remote) "url"))
+                  numb)))
+
 
 (defun pr-link (numb)
   (interactive "sPR number: ")
-  (insert "[#" numb "]" "(https://github.com/dc-js/dc.js/pull/" numb ")"))
+  (insert "[#" numb "]"
+          (format "(https://github.com/%s/pull/%s)"
+                  (replace-regexp-in-string
+                   "\\`.+github\\.com:\\(.+\\)\\.git\\'" "\\1"
+                   (magit-get "remote" (magit-get-remote) "url"))
+                  numb)))
 
 (global-set-key (kbd "M-I") 'issue-link)
 
