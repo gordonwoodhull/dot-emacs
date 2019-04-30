@@ -53,6 +53,11 @@
 
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 
+(add-hook 'js2-mode-hook
+      (lambda ()
+        (when (string-match-p "metagraph" (buffer-file-name))
+          (setq js2-additional-externs '("metagraph" "mg" "as_array" "as_keyvalue" "build_map")))))
+
 (column-number-mode)
 (setq ring-bell-function 'ignore)
 (desktop-save-mode 0)
@@ -70,6 +75,11 @@
 
 (require 'session)
 (add-hook 'after-init-hook 'session-initialize)
+
+(add-hook 'json-mode-hook
+          (lambda ()
+            (make-local-variable 'js-indent-level)
+            (setq js-indent-level 2)))
 
 (require 'buffer-move)
 
@@ -112,6 +122,9 @@
  '(indent-tabs-mode nil)
  '(magit-item-highlight-face nil)
  '(magit-push-always-verify nil)
+ '(package-selected-packages
+   (quote
+    (web-mode js-doc typescript-mode json-mode markdown-mode js2-mode session multi-web-mode magit ess buffer-move)))
  '(session-use-package t nil (session))
  '(show-trailing-whitespace t))
 
@@ -156,8 +169,8 @@ Also returns nil if pid is nil."
                    (magit-get "remote" (magit-get-remote) "url"))
                   numb)))
 
+(global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "M-I") 'issue-link)
-
 (global-set-key (kbd "M-P") 'pr-link)
 
 (setq mouse-wheel-scroll-amount '(1))
@@ -171,3 +184,15 @@ Also returns nil if pid is nil."
     (abort-recursive-edit)))
 
 (add-hook 'mouse-leave-buffer-hook 'stop-using-minibuffer)
+
+(setq-default c-basic-offset 4)
+
+(setq js-doc-mail-address "gordon@woodhull.com"
+       js-doc-author (format "Gordon Woodhull <%s>" js-doc-mail-address)
+       js-doc-url "nononononononon"
+       js-doc-license "who knows")
+
+(add-hook 'js2-mode-hook
+          #'(lambda ()
+              (define-key js2-mode-map "\C-ci" 'js-doc-insert-function-doc)
+              (define-key js2-mode-map "@" 'js-doc-insert-tag)))
