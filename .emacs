@@ -17,9 +17,8 @@
 (when (equal system-type 'darwin) (set-exec-path-from-shell-PATH))
 
 (require 'package)
-(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")
-                         ("melpa" . "http://melpa.org/packages/")))
+(add-to-list 'package-archives
+             '("melpa-stable" . "https://melpa.org/packages/") t)
 (package-initialize)
 
 (defun close-all-buffers ()
@@ -116,7 +115,7 @@
  '(buffers-menu-max-size 30)
  '(compilation-scroll-output (quote first-error))
  '(compile-command "cd ~/Products/upc-clang; make -j5 -k ")
- '(custom-enabled-themes (quote (wheatgrass)))
+ '(custom-enabled-themes (quote (deeper-blue)))
  '(desktop-save-mode t)
  '(fill-column 100)
  '(indent-tabs-mode nil)
@@ -124,11 +123,15 @@
  '(magit-push-always-verify nil)
  '(package-selected-packages
    (quote
-    (web-mode js-doc typescript-mode json-mode markdown-mode js2-mode session multi-web-mode magit ess buffer-move)))
+    (elpy graphviz-dot-mode tuareg magit-gitflow poly-markdown jekyll-modes yaml-mode rjsx-mode web-mode js-doc typescript-mode json-mode markdown-mode js2-mode session multi-web-mode magit ess buffer-move)))
  '(session-use-package t nil (session))
  '(show-trailing-whitespace t))
 
 (add-to-list 'session-mode-disable-list 'git-commit-mode)
+(add-hook 'elpy-mode-hook (lambda () (highlight-indentation-mode -1)))
+
+(elpy-enable)
+(setq elpy-rpc-python-command "python3")
 
 ;;; desktop-override-stale-locks.el begins here
 (defun emacs-process-p (pid)
